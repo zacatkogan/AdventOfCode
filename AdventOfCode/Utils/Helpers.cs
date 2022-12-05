@@ -45,5 +45,16 @@ namespace AdventOfCode
                 return ht;
             }
         }
+    
+        public static List<TDest> ToList<TSrc, TDest>(this IEnumerable<TSrc> source, Func<TSrc, TDest> selector)
+        {
+            return source.Select(selector).ToList();
+        }
+
+        public static IEnumerable<int> ToRange(this string str, string separator = "-")
+        {
+            var range = str.Split(separator).Select(int.Parse).ToList();
+            return Enumerable.Range(range[0], range[1]-range[0] + 1);
+        }
     }
 }
