@@ -2,128 +2,77 @@ namespace AdventOfCode
 {
     public class Day_07 : BaseDay
     {
-        string sampleData = @"$ cd /
-$ ls
-dir a
-14848514 b.txt
-8504156 c.dat
-dir d
-$ cd a
-$ ls
-dir e
-29116 f
-2557 g
-62596 h.lst
-$ cd e
-$ ls
-584 i
-$ cd ..
-$ cd ..
-$ cd d
-$ ls
-4060174 j
-8033020 d.log
-5626152 d.ext
-7214296 k";
-
         class File
         {
-            public int Size;
             public string Name;
+            public int Size;
         }
 
         class Folder
         {
-            public string name;
-            public Folder parent;
-            public List<Folder> subfolders = new();
-            public List<File> files = new();
-            public int size => GetFiles().Sum(x => x.Size);
+            public string Name;
+            public Folder Parent;
+            public Dictionary<string, Folder> subfolders = new();
+            public Dictionary<string, File> files = new();
+            public int Size => size ??= 
+                files.Values.Sum(x => x.Size) + subfolders.Values.Sum(x => x.Size); 
+            private int? size;
 
             public IEnumerable<File> GetFiles()
             {
-                foreach (var file in files)
-                    yield return file;
-                
-                foreach (var folder in subfolders)
-                {
-                    foreach (var subfile in folder.GetFiles())
-                        yield return subfile;
-                }
+                return files.Values.Concat(subfolders.Values.SelectMany(x => x.GetFiles()));
             }
+
             public IEnumerable<Folder> GetFolders()
             {
-                foreach (var folder in subfolders)
-                {
-                    yield return folder;
-
-                    foreach (var f in folder.GetFolders())
-                    {
-                        yield return f;
-                    }
-                }
+                return subfolders.Values.Concat(subfolders.Values.SelectMany(x => x.GetFolders()));
             }
         }
 
         Folder ParseFolderStructure()
         {
-            Folder rootFolder = new Folder(){name="/"};
+            Folder rootFolder = new Folder(){Name="/"};
 
             Folder currentFolder = rootFolder;
 
-            // construct tree
-            // cd means change to folder
-            string[] lines = Data.Split("\n");
+            string[] commands = Data.Split("$", StringSplitOptions.RemoveEmptyEntries);
 
-            foreach (var line in lines)
+            foreach (var command in commands)
             {
-                if (line.StartsWith("$"))
-                {
-                    var commandLine = line.Split(" ");
-                    var command = commandLine[1];
+                var commandLines = command.Split("\n", StringSplitOptions.RemoveEmptyEntries);
+                var commandLine = commandLines[0];
+                var commandInput = commandLine.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
-                    switch (command)
-                    {
-                        case "cd":
-                            string dir = commandLine[2];
-                            if (dir == "..")
-                                currentFolder = currentFolder.parent;
-                            else if (dir == "/")
-                                currentFolder = rootFolder;
-                            else
-                                currentFolder = currentFolder.subfolders.First(x => x.name == dir);
-                            break;
-                        case "ls":
-                        break;
-                    }
-                }
-                else
+                var commandName = commandInput[0];
+
+                switch (commandName)
                 {
-                    // else we're part of an LS call.
-                    // add results to the current folder
-                    var fileinfo = line.Split(" ");
-                    var filename = fileinfo[1];
-                    if (fileinfo[0]=="dir")
-                    {
-                        var folder = currentFolder.subfolders.FirstOrDefault(x => x.name == filename);
-                        if (folder != null)
-                            continue;
-                        
-                        else 
+                    case "cd":
+                        string dir = commandInput[1];
+                        if (dir == "..")
+                            currentFolder = currentFolder.Parent;
+                        else if (dir == "/")
+                            currentFolder = rootFolder;
+                        else
+                            currentFolder = currentFolder.subfolders[dir];
+                        break;
+                    case "ls":
+                        var commandOutputs = commandLines.Skip(1);
+                        foreach (var commandOutput in commandOutputs)
                         {
-                            folder = new Folder(){name=filename, parent = currentFolder};
-                            currentFolder.subfolders.Add(folder);
-                            
+                            // add results to the current folder
+                            var fileinfo = commandOutput.Split(" ");
+                            var filename = fileinfo[1];
+                            if (fileinfo[0]=="dir")
+                            {
+                                currentFolder.subfolders.Add(filename, new Folder(){Name=filename, Parent = currentFolder});   
+                            }
+                            else
+                            {
+                                currentFolder.files.Add(filename, new File(){Name = filename, Size = int.Parse(fileinfo[0])});
+                            }   
                         }
-                    }
-                    else
-                    {
-                        var file = currentFolder.files.FirstOrDefault(x => x.Name == filename);
-                        if (file != null)
-                            continue;
-                        
-                        currentFolder.files.Add(new File(){Name = filename, Size = int.Parse(fileinfo[0])});
-                    }
+                        break;
                 }
             }
 
@@ -134,23 +83,16 @@ $ ls
         {
             var rootFolder = ParseFolderStructure();
 
-            return new(rootFolder.GetFolders().Where(x => x.size <= 100_000).Sum(x => x.size).ToString());
+            return new(rootFolder.GetFolders().Where(x => x.Size <= 100_000).Sum(x => x.Size).ToString());
         }
 
         public override ValueTask<string> Solve_2()
         {
             var rootFolder = ParseFolderStructure();
+            var toFree = 30_000_000 - (70_000_000 - rootFolder.Size);
 
-            var filesystemTotalSize = 70000000;
-            var totalUsed = rootFolder.size;
-            var currentlyFree = filesystemTotalSize - totalUsed;
-            var toFree = 30_000_000 - currentlyFree;
-
-            var folderList = rootFolder.GetFolders().Where(x => x.size >= toFree).OrderBy(x => x.size).ToList();
-            
-            var result = folderList.First();
-            
-            return new(result.size.ToString());
+            var result = rootFolder.GetFolders().Where(x => x.Size >= toFree).OrderBy(x => x.Size).First();
+            return new(result.Size.ToString());
         }
     }
 }
