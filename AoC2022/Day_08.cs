@@ -11,8 +11,6 @@ namespace AdventOfCode
         int[,] ParsedData => ParsedDataLazy.Value;
         Lazy<int[,]> ParsedDataLazy => new Lazy<int[,]>(GetParsedData);
 
-        
-        
         int[,] GetParsedData()
         {
             var rows = Data.Split("\n");
@@ -32,22 +30,18 @@ namespace AdventOfCode
             var rows = trees.GetLength(0);
             var cols = trees.GetLength(1);
 
-
             var visibleTrees = 0;
 
             // top down, bottom up
             for(int col = 0; col < cols; col++)
+            for(int row = 0; row < rows; row++)
             {
-                for(int row = 0; row < rows; row++)
-                {
-                    if (IsVisible(row, col))
-                        visibleTrees++;
-                }
+                if (IsVisible(row, col))
+                    visibleTrees++;
             }
             
             return new(visibleTrees.ToString());
         }
-
 
         public bool IsVisible(int row, int col)
         {
@@ -72,8 +66,6 @@ namespace AdventOfCode
 
             var rows = ParsedData.GetLength(0);
             var cols = ParsedData.GetLength(1);
-
-            var cont = false;
 
             var x1 = 0;
             foreach (var r in Enumerable.Range(0, row).Reverse())
@@ -115,10 +107,8 @@ namespace AdventOfCode
             var rows = trees.GetLength(0);
             var cols = trees.GetLength(1);
 
-
             var maxScore = 0;
 
-            // top down, bottom up
             for(int col = 1; col < cols-1; col++)
             {
                 for(int row = 1; row < rows-1; row++)
