@@ -2,22 +2,13 @@ namespace AdventOfCode
 {
     public class Day_09 : BaseDay
     {
-        Dictionary<string, (int x, int y)> Moves = new()
+        Dictionary<string, Position> Moves = new()
         {
             {"U",  (0, 1)},
             {"D", (0, -1)},
             {"L", (-1, 0)},
             {"R", (1, 0)}
         };
-
-        string testData = @"R 4
-U 4
-L 3
-D 1
-R 4
-D 1
-L 5
-R 2";
 
         public override ValueTask<string> Solve_1()
         {
@@ -27,34 +18,33 @@ R 2";
 
             var tailVisited = new HashSet<(int, int)>();
 
-            var head = (x:0,y:0);
-            var tail = (x:0,y:0);
+            Position head = (0,0);
+            Position tail = (0,0);
 
             tailVisited.Add(tail);
             foreach (var move in moves)
             {
                 for (int i = 0; i < move.dist; i++)
                 {
-                    var moveDir = Moves[move.dir];
-                    head = (head.x + moveDir.x, head.y + moveDir.y);
+                    head = head + Moves[move.dir];;
 
-                    var htDiff = (x:head.x - tail.x, y:head.y - tail.y);
+                    var htDiff = head - tail;
                     // move in direction to minimize diff(X,Y)
 
                     var newTailX = 0;
                     var newTailY = 0;
                     var diagonal = false;
 
-                    if (Math.Sqrt((float)(htDiff.x * htDiff.x + htDiff.y * htDiff.y)) > 2)
+                    if (Math.Sqrt((float)(htDiff.X * htDiff.X + htDiff.Y * htDiff.Y)) > 2)
                         diagonal = true;
 
-                    if (Math.Abs(htDiff.x) > 1 || diagonal)
-                        newTailX = htDiff.x / Math.Abs(htDiff.x);
+                    if (Math.Abs(htDiff.X) > 1 || diagonal)
+                        newTailX = htDiff.X / Math.Abs(htDiff.X);
 
-                    if (Math.Abs(htDiff.y) > 1 || diagonal)
-                        newTailY = htDiff.y / Math.Abs(htDiff.y);
+                    if (Math.Abs(htDiff.Y) > 1 || diagonal)
+                        newTailY = htDiff.Y / Math.Abs(htDiff.Y);
 
-                    tail = (tail.x + newTailX, tail.y + newTailY);
+                    tail = (tail.X + newTailX, tail.Y + newTailY);
 
                     tailVisited.Add(tail);
                 }
@@ -66,7 +56,7 @@ R 2";
         {
             var visited = new HashSet<(int, int)>();
 
-            var knots = Enumerable.Range(0,10).ToList(x => new pos(0,0));
+            var knots = Enumerable.Range(0,10).ToList(x => new Position(0,0));
 
             var moves = Data.Split("\n")
                 .Select(x => x.Split(" "))
@@ -76,10 +66,8 @@ R 2";
             {
                 for(int i = 0; i < move.dist; i++)
                 {
-                    var moveDir = Moves[move.dir];
-
                     // move head, then update all the knots
-                    knots[0] = new pos(knots[0].x + moveDir.x, knots[0].y + moveDir.y);
+                    knots[0] = knots[0] + Moves[move.dir];
 
                     for (int j = 1; j < knots.Count; j++)
                     {
@@ -87,45 +75,33 @@ R 2";
                     }
 
                     var tail = knots.Last();
-                    visited.Add((tail.x, tail.y));
+                    visited.Add(tail);
                 }
             }
 
             return new(visited.Count.ToString());
         }
 
-        pos MoveTail(pos head, pos tail)
+        Position MoveTail(Position head, Position tail)
         {
-            var htDiff = (x:head.x - tail.x, y:head.y - tail.y);
+            var htDiff = head - tail;
 
-            var newTailX = 0;
-            var newTailY = 0;
+            var tailMoveX = 0;
+            var tailMoveY = 0;
             var diagonal = false;
 
-            if (Math.Abs(htDiff.x) + Math.Abs(htDiff.y) > 2)
+            if (Math.Abs(htDiff.X) + Math.Abs(htDiff.Y) > 2)
                 diagonal = true;
 
-            if (Math.Abs(htDiff.x) > 1 || diagonal)
-                newTailX = htDiff.x / Math.Abs(htDiff.x);
+            if (Math.Abs(htDiff.X) > 1 || diagonal)
+                tailMoveX = htDiff.X / Math.Abs(htDiff.X);
 
-            if (Math.Abs(htDiff.y) > 1 || diagonal)
-                newTailY = htDiff.y / Math.Abs(htDiff.y);
+            if (Math.Abs(htDiff.Y) > 1 || diagonal)
+                tailMoveY = htDiff.Y / Math.Abs(htDiff.Y);
 
-            tail = new pos(tail.x + newTailX, tail.y + newTailY);
+            tail = tail + (tailMoveX, tailMoveY);
 
             return tail;
-        }
-
-
-        class pos
-        {
-            public pos(int x, int y)
-            {
-                this.x = x;
-                this.y = y;
-            }
-            public int x;
-            public int y;
         }
 
     }
