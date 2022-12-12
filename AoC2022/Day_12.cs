@@ -23,36 +23,36 @@ namespace AdventOfCode
             var yMax = map.GetLength(1);
             var xMax = map.GetLength(0);
 
-                var q = new PriorityQueue<Position, int>();
-                q.Enqueue(start, 0);
+            var q = new PriorityQueue<Position, int>();
+            q.Enqueue(start, 0);
 
-                var visited = new Dictionary<Position, int>();
+            var visited = new Dictionary<Position, int>();
 
-                while (q.TryDequeue(out Position position, out int steps))
+            while (q.TryDequeue(out Position? position, out int steps))
+            {
+                if (position == end)
                 {
-                    if (position == end)
-                    {
-                        return steps;
-                    }
+                    return steps;
+                }
 
-                    if (!visited.TryAdd(position, steps))
-                        continue;
+                if (!visited.TryAdd(position, steps))
+                    continue;
 
-                    var currentLetter = map[position.X, position.Y];
+                var currentLetter = map[position.X, position.Y];
 
-                    var nodes = Neighbors.Select(n => position + n)
-                        .Where(n => n.X >= 0 && n.X < xMax
-                                && n.Y >= 0 && n.Y < yMax)
-                        .Where(n => map[n.X, n.Y] <= (currentLetter + 1))
-                        .Where(n => !visited.ContainsKey(n))
-                        .ToList();
+                var nodes = Neighbors.Select(n => position + n)
+                    .Where(n => n.X >= 0 && n.X < xMax
+                            && n.Y >= 0 && n.Y < yMax)
+                    .Where(n => map[n.X, n.Y] <= (currentLetter + 1))
+                    .Where(n => !visited.ContainsKey(n))
+                    .ToList();
 
-                    foreach (var node in nodes)
-                    {
-                        // the total cost of visiting a node is the cost of the previous node plus its own cost
-                        var newPriority = steps+1;
-                        q.Enqueue(node, newPriority);
-                }   
+                foreach (var node in nodes)
+                {
+                    // the total cost of visiting a node is the cost of the previous node plus its own 
+                    var newPriority = steps+1;
+                    q.Enqueue(node, newPriority);
+                }       
             }
 	
             return int.MaxValue;
@@ -70,28 +70,20 @@ abdefghi";
             Position start = (0,0);
             Position end = (0,0);
 
-            var rows = Data.Split("\n");
-            var cols = rows[0].Length;
-
-            var grid = new int[rows.Length,cols];
-            
-            for (int i = 0; i < rows.Length; i++)
-            for (int j = 0; j < cols; j++ )
-            {
-                var c = rows[i][j];
+            var grid = Data.To2dArray((c, pos) => {
                 if (c == 'S')
                 {
-                    grid[i,j] = 1;
-                    start = (i,j);
+                    start = pos;
+                    return 1;
                 }
                 else if (c == 'E')
                 {
-                    grid[i,j] = 26;
-                    end = (i,j);
+                    end = pos;
+                    return 26;
                 }
                 else
-                    grid[i,j] = (int)(rows[i][j] - 'a' + 1);
-            }
+                    return (int)(c - 'a' + 1);
+            });
 
             return (grid, start, end);
         }
@@ -101,31 +93,22 @@ abdefghi";
             List<Position> starts = new();
             Position end = (0,0);
 
-            var rows = Data.Split("\n");
-            var cols = rows[0].Length;
-
-            var grid = new int[rows.Length,cols];
-            
-            for (int i = 0; i < rows.Length; i++)
-            for (int j = 0; j < cols; j++ )
-            {
-                var c = rows[i][j];
+            var grid = Data.To2dArray((c, pos) => {
                 if (c == 'S' || c == 'a')
                 {
-                    grid[i,j] = 1;
-                    starts.Add((i,j));
+                    starts.Add(pos);
+                    return 1;
                 }
                 else if (c == 'E')
                 {
-                    grid[i,j] = 26;
-                    end = (i,j);
+                    end = pos;
+                    return 26;
                 }
                 else
-                    grid[i,j] = (int)(rows[i][j] - 'a' + 1);
-            }
+                    return (int)(c - 'a' + 1);
+            });
 
             return (grid, starts, end);
         }
-
     }
 }

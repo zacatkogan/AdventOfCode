@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Numerics;
 namespace AdventOfCode
 {
     public static class Helpers
@@ -55,6 +56,70 @@ namespace AdventOfCode
         {
             var range = str.Split(separator).Select(int.Parse).ToList();
             return Enumerable.Range(range[0], range[1]-range[0] + 1);
+        }
+
+        public static T Dequeue<T>(this IList<T> list)
+        {
+            var value = list[0];
+            list.RemoveAt(0);
+            return value;
+        }
+
+        public static void Enqueue<T>(this IList<T> list, T value)
+        {
+            list.Add(value);
+        }
+
+        public static void Push<T>(this IList<T> list, T value)
+        {
+            list.Add(value);
+        }
+
+        public static T Pop<T>(this IList<T> list)
+        {
+            var value = list[list.Count-1];
+            list.RemoveAt(list.Count-1);
+            
+            return value;
+        }
+
+        public static T Multiply<T>(this IEnumerable<T> sequence) where T: INumber<T>
+        {
+            return sequence.Aggregate(T.One, (current, next) => (T)current * (T)next);
+        }
+
+        public static T[,] To2dArray<T>(this string str, Func<char, T> selector)
+        {
+            var rows = str.Split("\n");
+            var cols = rows[0].Length;
+
+            var grid = new T[rows.Length,cols];
+            
+            for (int i = 0; i < rows.Length; i++)
+            for (int j = 0; j < cols; j++ )
+            {
+                grid[i, j] = selector(rows[i][j]);
+                var c = rows[i][j];
+            }
+
+            return (grid);
+        }
+
+        public static T[,] To2dArray<T>(this string str, Func<char, Position, T> selector)
+        {
+            var rows = str.Split("\n");
+            var cols = rows[0].Length;
+
+            var grid = new T[rows.Length,cols];
+            
+            for (int i = 0; i < rows.Length; i++)
+            for (int j = 0; j < cols; j++ )
+            {
+                grid[i, j] = selector(rows[i][j], (i,j));
+                var c = rows[i][j];
+            }
+
+            return (grid);
         }
     }
 }
