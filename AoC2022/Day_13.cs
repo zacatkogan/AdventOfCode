@@ -1,20 +1,19 @@
+using System.Text.Json;
+using Newtonsoft.Json.Linq;
+
 namespace AdventOfCode
 {
     public class Day_13 : BaseDay
     {
         public override object Solve1()
         {
-            //ParseList("[[4,4],4,4,4]");
-
             var pairsRaw = Data.Split("\n\n");
-            var pairs = pairsRaw.Select(x => x.Split("\n", StringSplitOptions.RemoveEmptyEntries))
-                .Select(x => (left:ParseList(x[0]), right:ParseList(x[1]))).ToList();
-
-            var test = pairs[3];
-            CompareLists(test.left, test.right);
-
-            var comparedPairs = pairs.Select(x => CompareLists(x.left, x.right)).ToList();
-            return comparedPairs.Select((x, i) => x.GetValueOrDefault() ? i + 1: 0).Sum();
+            var result = pairsRaw.Select(x => x.Split("\n", StringSplitOptions.RemoveEmptyEntries))
+                .ToList(x => (left:ParseListAsJson(x[0]), right:ParseListAsJson(x[1])))
+                .ToList(x => CompareListsPatternMatching(x.left, x.right))
+                .Select((x, i) => x < 0 ? i + 1: 0)
+                .Sum();
+            return result;
         }
 
         bool? CompareLists(List<object> left, List<object> right)
@@ -76,16 +75,18 @@ namespace AdventOfCode
 
         public override object Solve2()
         {
-            var packet1 = ParseList("[[2]]");
-            var packet2 = ParseList("[[6]]");
+            var packet1 = ParseListAsJson("[[2]]");
+            var packet2 = ParseListAsJson("[[6]]");
+
+            var comparer = Comparer<JToken>.Create(CompareListsPatternMatching);
 
             var parsed = Data.Split("\n", StringSplitOptions.RemoveEmptyEntries)
-                .Select(x => ParseList(x)).ToList();
-            parsed.Add(packet1);
-            parsed.Add(packet2);
-
-            var comparer = Comparer<List<object>>.Create(ListComparerFunc);
-            parsed.Sort(comparer);
+                .Select(x => ParseListAsJson(x))
+                .Append(packet1)
+                .Append(packet2)
+                .ToList()
+                .Order(comparer)
+                .ToList();
 
             var p1 = parsed.IndexOf(packet1) + 1;
             var p2 = parsed.IndexOf(packet2) + 1;
@@ -133,6 +134,82 @@ namespace AdventOfCode
             return root;
         }
 
+        JToken ParseListAsJson(string str)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<JToken>(str);
+        }
+
+        bool? CompareLists(JToken left, JToken right)
+        {
+            for (int i = 0; i <= left.Count(); i++)
+            {
+                if (i == left.Count() && i == right.Count())
+                    return null;
+
+                if (i == left.Count() || i == right.Count())
+                    return i == left.Count();
+
+                var l = left[i];
+                var r = right[i];
+
+                if (l is JValue lint && r is JValue rint)
+                {
+                    if ((int)lint == (int)rint)
+                        continue;
+                    if (lint.Value<int>() < rint.Value<int>())
+                        return true;
+                    return false;
+                }
+
+                else if (l is JArray llist && r is JArray rlist)
+                {
+                    var result = CompareLists(llist, rlist);
+                    if (result is null)
+                        continue;
+                    return result;
+                }
+
+                // otherwise one is int and one is list
+                {
+                    if (l is JValue)
+                        l = new JArray(l);
+
+                    if (r is JValue)
+                        r = new JArray(r);
+
+                    var result = CompareLists(l as JArray, r as JArray);
+                        
+                    if (result is null)
+                        continue;
+                    return result;
+                }
+            }
+
+            return true;
+        }
+
+        // adapted to C# from https://github.com/jarshwah/advent-of-code/blob/main/python/2022/q13.py
+        int CompareListsPatternMatching(JToken left, JToken right)
+        {
+            switch(left, right)
+            {
+                case (JValue l, JValue r):
+                    return (int)l - (int)r;
+                case (JArray l, JArray r):
+                    return 
+                    Enumerable.Zip(left, right)
+                        .Select(x => CompareListsPatternMatching(x.First, x.Second))
+                        .Where(x => x != 0)
+                        .Append(left.Count() - right.Count())
+                        .First();
+                case (JArray l, JValue r):
+                    return CompareListsPatternMatching(l, new JArray(r));
+                case (JValue l, JArray r):
+                    return CompareListsPatternMatching(new JArray(l), r);
+                default:
+                    throw new Exception();
+            }
+        }
         string testData = @"[1,1,3,1,1]
 [1,1,5,1,1]
 
