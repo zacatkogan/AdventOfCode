@@ -121,5 +121,28 @@ namespace AdventOfCode
 
             return (grid);
         }
+
+        public static IEnumerable<T> Row<T>(this T[,] array, int row)
+        {
+            var cols = array.GetLength(1);
+            for (int i = 0; i < cols; i++)
+            {
+                yield return array[row, i];
+            }
+        }
+
+        public static IEnumerable<T> Col<T>(this T[,] array, int col)
+        {
+            var rows = array.GetLength(0);
+            for (int i = 0; i < rows; i++)
+            {
+                yield return array[i, col];
+            }
+        }
+    
+        public static T Get<T>(this T[,] arr, Position p)
+        {
+            return arr[p.X, p.Y];
+        }
     }
 }
