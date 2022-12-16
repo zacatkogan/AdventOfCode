@@ -5,9 +5,8 @@ namespace AdventOfCode
     {
         public Regex regex = new Regex(@"Valve (\w+) has flow rate=(\d+); tunnels? leads? to valves? ([\w, ]*)");
 
-        public struct Valve
+        public class Valve
         {
-            public Valve() { }
             public string Name;
             public int FlowRate;
             public List<string> Connections;
@@ -22,78 +21,73 @@ namespace AdventOfCode
         {
             public HashSet<string> OpenValves = new();
             public List<Valve> Valves;
-            public IEnumerable<string> Steps = Enumerable.Empty<string>();
             public Valve CurrentValve;
             public int FlowRate;
             public int PressureRelieved;
-            public int Time = 0;
 
-            public IEnumerable<Func<Map>> Actions()
+            public IEnumerable<string> Actions()
             {
                 if (!OpenValves.Contains(CurrentValve.Name) && CurrentValve.FlowRate != 0)
-                    yield return () => TurnValve();
+                    yield return "open";
 
                 foreach (var connection in CurrentValve.Connections)
-                    yield return () => WalkTo(connection);
-                
+                    yield return connection;
             }
 
-            public Map TurnValve()
+            public Map ExecuteAction(string action)
             {
-                var flowRate = FlowRate +  CurrentValve.FlowRate;
-                OpenValves.Add(CurrentValve.Name);
+                var flowRate = FlowRate;
+                var openValves = this.OpenValves.ToHashSet();
+                var currentValve = this.CurrentValve;
+
+                switch (action)
+                {
+                    case "open":
+                        flowRate += CurrentValve.FlowRate;
+                        openValves.Add(CurrentValve.Name);
+                        break;
+                    default:
+                        currentValve = Valves.FirstOrDefault(x => x.Name == action);
+                        break;
+                }
 
                 var map = new Map()
                 {
                     Valves = Valves,
-                    Steps = Steps.Append($"Turn on {CurrentValve.Name}"),
                     FlowRate = flowRate,
                     PressureRelieved = PressureRelieved + FlowRate,
-                    CurrentValve = CurrentValve,
-                    OpenValves = OpenValves.ToHashSet(),
-                    Time = Time + 1,
+                    CurrentValve = currentValve,
+                    OpenValves = openValves,
                 };
 
                 return map;
             }
-
-            public Map WalkTo(string room)
-            {
-                return new Map()
-                {
-                    Valves = Valves,
-                    Steps = Steps.Append($"Walk to {room}"),
-                    FlowRate = FlowRate,
-                    PressureRelieved = PressureRelieved + FlowRate,
-                    CurrentValve = Valves.First(x => x.Name == room),
-                    OpenValves = OpenValves.ToHashSet(),
-                    Time = Time + 1,
-                };
-            }
         }
 
-public class MapWithElephant
+        public class MapWithElephant
         {
             public HashSet<string> OpenValves = new();
             public List<Valve> Valves;
-            public IEnumerable<string> Steps = Enumerable.Empty<string>();
             public Valve CurrentValve;
             public Valve ElephantValve;
             public int FlowRate;
             public int PressureRelieved;
-            public int Time = 0;
 
             public MapWithElephant ExecuteActions(string action, string elephantAction)
             {
                 var newFlowRate = this.FlowRate;
-                var openValves = OpenValves.ToHashSet();
+                var openValves = OpenValves;
                 var currentValve = CurrentValve;
                 var elephantValve = ElephantValve;
 
                 if (action == "open")
                 {
-                    if (!openValves.Contains(CurrentValve.Name) && CurrentValve.FlowRate != 0 && openValves.Add(CurrentValve.Name))
-                     newFlowRate += CurrentValve.FlowRate;
+                    if (!openValves.Contains(CurrentValve.Name) && CurrentValve.FlowRate != 0)
+                    {
+                        openValves = openValves.ToHashSet();
+                        openValves.Add(CurrentValve.Name);
+                        newFlowRate += CurrentValve.FlowRate;
+                    }
                 }
                 else
                 {
@@ -102,8 +96,12 @@ public class MapWithElephant
 
                 if (elephantAction == "open")
                 {
-                    if (!openValves.Contains(ElephantValve.Name) && ElephantValve.FlowRate != 0 && openValves.Add(ElephantValve.Name))
+                    if (!openValves.Contains(ElephantValve.Name) && ElephantValve.FlowRate != 0)
+                    {
+                        openValves = openValves.ToHashSet();
+                        openValves.Add(ElephantValve.Name);
                         newFlowRate += ElephantValve.FlowRate;
+                    }
                 }
                 else
                 {
@@ -113,13 +111,11 @@ public class MapWithElephant
                 var map = new MapWithElephant()
                 {
                     Valves = Valves,
-                    Steps = Steps.Append($"{action}, {elephantAction}"),
                     FlowRate = newFlowRate,
                     PressureRelieved = PressureRelieved + FlowRate,
                     CurrentValve = currentValve,
                     ElephantValve = elephantValve,
                     OpenValves = openValves,
-                    Time = Time + 1,
                 };
 
                 return map;
@@ -145,7 +141,6 @@ public class MapWithElephant
 
                 return a;
             }
-
         }
 
 
@@ -176,12 +171,12 @@ public class MapWithElephant
             
             for (int i = 0; i < 30; i++)
             {
-                turns = turns.SelectMany(x => x.Actions().Select(x => x()));
+                turns = turns.SelectMany(x => x.Actions().Select(y => x.ExecuteAction(y)));
                 
                 if (i > 5)                
                 {
                     turns = turns.OrderByDescending(x => x.PressureRelieved).ToList();
-                    turns = turns.Take(10000);
+                    turns = turns.Take(1000);
                 }
             }
 
@@ -193,23 +188,26 @@ public class MapWithElephant
         public override object Solve2()
         {
             var valves = ParseData().ToList();
+            var startValve = valves.First(x => x.Name == "AA");
 
             var start = new MapWithElephant() {
                 Valves = valves,
-                CurrentValve = valves.First(x => x.Name == "AA"),
-                ElephantValve = valves.First(x => x.Name == "AA")
+                CurrentValve = startValve,
+                ElephantValve = startValve
             };
 
             IEnumerable<MapWithElephant> turns = new[] {start};
             
             for (int i = 0; i < 26; i++)
             {
-                turns = turns.SelectMany(x => x.Actions().Select(y => x.ExecuteActions(y.Item1, y.Item2)));
+                turns = turns.SelectMany(x => x.Actions().Select(y => x.ExecuteActions(y.Item1, y.Item2))).ToList();
                 
-                if (i > 5)                
+                if (i > 4)                
                 {
-                    turns = turns.OrderByDescending(x => x.PressureRelieved).ToList();
-                    turns = turns.Take(10000);
+                    turns = turns
+                        //.Where(x => x.OpenValves.Count > 0)
+                        .OrderByDescending(x => x.PressureRelieved)
+                        .Take(10000).ToList();
                 }
             }
 
