@@ -11,5 +11,7 @@ namespace AdventOfCode
         {
             throw new NotImplementedException();
         }
+
+        public string testData = @"";
     }
 }
