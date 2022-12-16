@@ -34,7 +34,7 @@ namespace AdventOfCode
             }
         }
 
-        public static long ManhattanDistance(LongPosition p1, LongPosition p2)
+        public static long ManhattanDistance(PositionLong p1, PositionLong p2)
         {
             var d = (p1 - p2);
             return Math.Abs(d.X) + Math.Abs(d.Y);
@@ -44,10 +44,10 @@ namespace AdventOfCode
 
         public class Sensor
         {
-            public LongPosition Position;
-            public LongPosition BeaconPosition;
+            public PositionLong Position;
+            public PositionLong BeaconPosition;
 
-            public IEnumerable<LongPosition> InvalidPositionsOnRow(int row)
+            public IEnumerable<PositionLong> InvalidPositionsOnRow(int row)
             {
                 var maxDist = ManhattanDistance(Position, BeaconPosition);
 
@@ -82,8 +82,8 @@ namespace AdventOfCode
             foreach (var row in Data.Split("\n"))
             {
                 var matches = regex.Match(row);
-                LongPosition sensor = (int.Parse(matches.Groups[1].Value), int.Parse(matches.Groups[2].Value));
-                LongPosition beacon = (int.Parse(matches.Groups[3].Value), int.Parse(matches.Groups[4].Value));
+                PositionLong sensor = (int.Parse(matches.Groups[1].Value), int.Parse(matches.Groups[2].Value));
+                PositionLong beacon = (int.Parse(matches.Groups[3].Value), int.Parse(matches.Groups[4].Value));
 
                 yield return new Sensor() { Position = sensor, BeaconPosition = beacon};
             }
@@ -116,10 +116,10 @@ namespace AdventOfCode
             {
                 var combinedRanges = new List<RangeLong>();
                 bool anyCombined = false;
-                
+
             }
 
-                
+            return "";                
         }
 
 
