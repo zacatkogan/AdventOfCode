@@ -111,4 +111,33 @@ namespace AdventOfCode
             return $"({X},{Y})";
         }
     }
+
+    public record struct Position3d
+    {
+        public Position3d(int x, int y, int z)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+        }
+
+        public int X;
+        public int Y;
+        public int Z;
+
+        public static implicit operator Position3d((int, int, int) point)
+        {
+            return new Position3d(point.Item1, point.Item2, point.Item3);
+        }
+
+        public static Position3d operator +(Position3d p1, Position3d p2)
+        {
+            return (p1.X + p2.X, p1.Y + p2.Y, p1.Z + p2.Z);
+        }
+
+        public static List<Position3d> Neighbors = new List<Position3d>()
+        {
+            (0,0,1), (0,1,0), (1,0,0), (0,0,-1), (0,-1,0), (-1,0,0)
+        };
+    }
 }
