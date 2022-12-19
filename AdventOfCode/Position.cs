@@ -1,6 +1,7 @@
+using System.Collections;
 namespace AdventOfCode
 {
-    public record Position
+    public record Position : IEnumerable<int>
     {
         public static Dictionary<string, Position> Directions = new()
         {
@@ -53,6 +54,18 @@ namespace AdventOfCode
         public override string ToString()
         {
             return $"({X},{Y})";
+        }
+
+        IEnumerator<int> IEnumerable<int>.GetEnumerator()
+        {
+            yield return X;
+            yield return Y;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            yield return X;
+            yield return Y;
         }
     }
 
@@ -112,7 +125,7 @@ namespace AdventOfCode
         }
     }
 
-    public record struct Position3d
+    public record struct Position3d : IEnumerable<int>
     {
         public Position3d(int x, int y, int z)
         {
@@ -139,5 +152,19 @@ namespace AdventOfCode
         {
             (0,0,1), (0,1,0), (1,0,0), (0,0,-1), (0,-1,0), (-1,0,0)
         };
+    
+        IEnumerator<int> IEnumerable<int>.GetEnumerator()
+        {
+            yield return X;
+            yield return Y;
+            yield return Z;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            yield return X;
+            yield return Y;
+            yield return Z;
+        }
     }
 }

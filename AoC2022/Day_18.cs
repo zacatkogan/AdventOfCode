@@ -46,13 +46,8 @@ namespace AdventOfCode
             {
                 var newExternalBlocks = Position3d.Neighbors.Select(n => n + extBlock)
                     .Where(n => !externalSpaces.Contains(n) && !blocksHash.Contains(n))
-                    .Where(b => 
-                           b.X >= externalDimsMin.X 
-                        && b.Y >= externalDimsMin.Y
-                        && b.Z >= externalDimsMin.Z
-                        && b.X <= externalDimsMax.X
-                        && b.Y <= externalDimsMax.Y
-                        && b.Z <= externalDimsMax.Z
+                    .Where(b => Enumerable.Zip(b, externalDimsMin).All(x => x.First >= x.Second)
+                        && Enumerable.Zip(b, externalDimsMax).All(x => x.First <= x.Second)
                     ).ToList();
                 
                 newExternalBlocks.ForEach(b => externalSpaces.Add(b));
