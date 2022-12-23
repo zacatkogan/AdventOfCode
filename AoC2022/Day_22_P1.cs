@@ -121,7 +121,6 @@ namespace AdventOfCode
         {
             var dirVector = GetDirectionVector(direction);
 
-            var fullVector = dirVector * steps;
             var position = start;
 
             if (dirVector.X == 0)
