@@ -3,6 +3,12 @@ namespace AdventOfCode
 {
     public record Position : IEnumerable<int>
     {
+        public static int ManhattanDistance(Position a, Position b)
+        {
+            var distance = a - b;
+            return Math.Abs(distance.X) + Math.Abs(distance.Y);
+        }
+
         public static Dictionary<string, Position> Directions = new()
         {
             {"U",  (0, 1)},
@@ -39,6 +45,11 @@ namespace AdventOfCode
         public static Position operator -(Position a, Position b)
         {
             return new Position(a.X - b.X, a.Y - b.Y);
+        }
+        
+        public static Position operator *(Position a, int b)
+        {
+            return new Position(a.X * b, a.Y * b);
         }
 
         public static implicit operator Position((int, int) point)
