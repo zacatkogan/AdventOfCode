@@ -178,4 +178,54 @@ namespace AdventOfCode
             yield return Z;
         }
     }
+
+    public record struct Position3dLong : IEnumerable<long>
+    {
+        public Position3dLong(int x, int y, int z)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+        }
+
+        public Position3dLong(long x, long y, long z)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+        }
+
+        public long X;
+        public long Y;
+        public long Z;
+
+        public static implicit operator Position3dLong((long, long, long) point)
+        {
+            return new Position3dLong(point.Item1, point.Item2, point.Item3);
+        }
+
+        public static Position3dLong operator +(Position3dLong p1, Position3dLong p2)
+        {
+            return (p1.X + p2.X, p1.Y + p2.Y, p1.Z + p2.Z);
+        }
+
+        public static List<Position3d> Neighbors = new List<Position3d>()
+        {
+            (0,0,1), (0,1,0), (1,0,0), (0,0,-1), (0,-1,0), (-1,0,0)
+        };
+    
+        IEnumerator<long> IEnumerable<long>.GetEnumerator()
+        {
+            yield return X;
+            yield return Y;
+            yield return Z;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            yield return X;
+            yield return Y;
+            yield return Z;
+        }
+    }
 }
