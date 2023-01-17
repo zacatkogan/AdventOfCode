@@ -122,7 +122,6 @@ namespace AdventOfCode
             return "";                
         }
 
-
         public override object Solve2()
         {
             var maxVal = 4_000_000;

@@ -63,16 +63,7 @@ namespace AdventOfCode
 
             var beaconRings = beacons.Select(x => x.GetOutsideRing().Where(p => p.X >= 0 & p.X <=maxVal & p.Y >= 0 & p.Y <= maxVal));
 
-            var hs = new HashSet<PositionLong>();
-                        
-                
-
-
-            var unorderedHits = beaconRings.Reverse()
-                .SelectMany(x => x)
-            ;
-
-            foreach (var candidate in unorderedHits)
+            foreach (var candidate in beaconRings.SelectMany(x => x))
             {
                 if (beacons.Any(b => b.ContainsPoint(candidate)))
                     continue;
