@@ -80,8 +80,14 @@ namespace AdventOfCode
         }
     }
 
-    public record PositionLong
+    public record struct PositionLong
     {
+        public static long ManhattanDistance(PositionLong a, PositionLong b)
+        {
+            var distance = a - b;
+            return Math.Abs(distance.X) + Math.Abs(distance.Y);
+        }
+
         public static Dictionary<string, PositionLong> Directions = new()
         {
             {"U",  (0, 1)},
