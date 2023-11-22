@@ -1,2 +1,3 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using AdventOfCode.AoC2020;
+
+AoCHelper.Solver.Solve<Day6>();
