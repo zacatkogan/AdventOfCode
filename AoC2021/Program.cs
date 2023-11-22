@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Year_2021
+﻿namespace AdventOfCode.AoC2021
 {
     internal class Program
     {

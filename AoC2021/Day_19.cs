@@ -1,4 +1,4 @@
-namespace AdventOfCode
+namespace AdventOfCode.AoC2021
 {
     public class Day_19 : BaseDay
     {

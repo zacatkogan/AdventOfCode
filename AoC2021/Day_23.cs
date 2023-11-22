@@ -2,7 +2,7 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using AdventOfCode;
 
-namespace AdventOfCode.Year_2021
+namespace AdventOfCode.AoC2021
 {
     public class Day_23 : BaseDay
     {

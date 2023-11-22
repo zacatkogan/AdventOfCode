@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AoC2021
+namespace AdventOfCode.AoC2021
 {
     internal class Day_02
     {

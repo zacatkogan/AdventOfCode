@@ -24,6 +24,11 @@ namespace AdventOfCode
             yield return subSequence;
         }
     
+        public static IEnumerable<string> SplitOnLines(this string str)
+        {
+            return str.Split(['\r', '\n']);
+        }
+
         public static IOrderedEnumerable<T> OrderByDescending<T>(this IEnumerable<T> sequence)
         {
             return sequence.OrderByDescending(x => x);
