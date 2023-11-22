@@ -1,0 +1,17 @@
+namespace AdventOfCode.AoC2023
+{
+    public class Day_XX : BaseDay
+    {
+        public override object Solve1()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override object Solve2()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string testData = @"";
+    }
+}
