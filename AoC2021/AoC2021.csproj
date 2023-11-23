@@ -5,6 +5,21 @@
     <Compile Remove="Day_13.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Day_03 Redux.linq" />
+    <None Remove="Day_10.linq" />
+    <None Remove="Day_11.linq" />
+    <None Remove="Day_12.linq" />
+    <None Remove="Day_13 redux.linq" />
+    <None Remove="Day_13.linq" />
+    <None Remove="Day_14.linq" />
+    <None Remove="Day_15.linq" />
+    <None Remove="Day_17.linq" />
+    <None Remove="Day_18Redux.linq" />
+    <None Remove="Day_20.linq" />
+    <None Remove="Day_21 p1.linq" />
+    <None Remove="Day_21 p2.linq" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AdventOfCode\AdventOfCode.csproj" />

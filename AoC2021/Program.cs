@@ -4,7 +4,8 @@
     {
         public static void Main(string[] args)
         {
-            AoCHelper.Solver.Solve<Day_23>();
+            //AoCHelper.Solver.SolveAll();
+            AoCHelper.Solver.Solve<Day_19>().GetAwaiter().GetResult();
         }
     }
 }
