@@ -1,15 +1,21 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <Compile Remove="Day_12.cs" />
+    <Compile Remove="Day_13.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <ProjectReference Include="..\AdventOfCode\AdventOfCode.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AoCHelper" Version="2.0.0" />
+    <PackageReference Include="AoCHelper" Version="2.0.2" />
     <PackageReference Include="Magick.net-q8-anycpu" Version="12.2.1" />
     <PackageReference Include="Magick.net.core" Version="12.2.1" />
-    <PackageReference Include="newtonsoft.json" Version="13.0.2" />
-    <PackageReference Include="SkiaSharp" Version="2.88.3" />
+    <PackageReference Include="newtonsoft.json" Version="13.0.3" />
+    <PackageReference Include="SkiaSharp" Version="2.88.6" />
   </ItemGroup>
 
   <PropertyGroup>

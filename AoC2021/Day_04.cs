@@ -9,7 +9,7 @@ namespace AdventOfCode.AoC2021
         {
             var splitData = Data.Split('\n');
 
-            var bingoInput = splitData.First().ToString().Split(",").Select(int.Parse); // comma delimited string of inputs
+            var bingoInput = splitData.First().Split(",").Select(int.Parse).ToList(); // comma delimited string of inputs
             var boards = ParseData(splitData.Skip(2)).ToList(); // first 2 rows are bingo input, rest are boards.
 
             foreach (var bingoNumber in bingoInput)

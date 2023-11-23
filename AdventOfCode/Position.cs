@@ -151,6 +151,19 @@ namespace AdventOfCode
             Z = z;
         }
 
+        public Position3d(IEnumerable<int> points)
+        {
+            var p = points.ToList();
+            if (p.Count != 3)
+            {
+                throw new ArgumentOutOfRangeException(nameof(points), "Must contain 3 points");
+            }
+
+            X = p[0];
+            Y = p[1];
+            Z = p[2];
+        }
+
         public int X;
         public int Y;
         public int Z;
@@ -165,10 +178,20 @@ namespace AdventOfCode
             return (p1.X + p2.X, p1.Y + p2.Y, p1.Z + p2.Z);
         }
 
+        public static Position3d operator -(Position3d p1, Position3d p2)
+        {
+            return (p1.X - p2.X, p1.Y - p2.Y, p1.Z - p2.Z);
+        }
+
         public static List<Position3d> Neighbors = new List<Position3d>()
         {
             (0,0,1), (0,1,0), (1,0,0), (0,0,-1), (0,-1,0), (-1,0,0)
         };
+
+        public int ManhattanDistance()
+        {
+            return this.Sum(Math.Abs);
+        }
     
         IEnumerator<int> IEnumerable<int>.GetEnumerator()
         {

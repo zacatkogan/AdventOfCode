@@ -40,6 +40,9 @@ namespace AdventOfCode.AoC2021
 
             var oxygenRating = p2Input.ToList();
 
+            var o2 = 0;
+            var co2 = 0;
+
             for (int i = 0; i < 12; i++)
             {
                 int ctr2 = 0;
@@ -51,7 +54,8 @@ namespace AdventOfCode.AoC2021
                 {
                     var oxrawRating = oxygenRating[0];
                     var oxbinaryRating = string.Join("", oxrawRating.Select(r => r.ToString()));
-                    Console.WriteLine("Oxygen Rating: {0}", Convert.ToInt32(oxbinaryRating, 2));
+                    o2 = Convert.ToInt32(oxbinaryRating, 2);
+                    break;
                 }
             }
 
@@ -70,11 +74,11 @@ namespace AdventOfCode.AoC2021
                 {
                     var co2rawRating = co2rating[0];
                     var co2binaryRating = string.Join("", co2rawRating.Select(r => r.ToString()));
-                    Console.WriteLine("CO2 Rating: {0}", Convert.ToInt32(co2binaryRating, 2));
+                    co2 = Convert.ToInt32(co2binaryRating, 2);
                 }
             }
 
-            return "";
+            return new { o2, co2 };
         }
     }
 }

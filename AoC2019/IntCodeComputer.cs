@@ -54,7 +54,7 @@ namespace AoC2019
 
             var value1 = GetValue(arg1, mode1);
             var value2 = GetValue(arg2, mode2);
-            int result = value;
+            //int result = value;
 
             PC += 4;
         }
