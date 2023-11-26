@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MathNet.Numerics.LinearAlgebra;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -39,6 +40,9 @@ namespace AdventOfCode.Utils
             new int[,] { { 0, -1, 0 }, { 0, 0, 1 }, { -1, 0, 0 } },
         };
 
+        public static List<Matrix<int>> RotationMatrices3d => _rotationMatrices3d ??= RotationVectors3d.Select(Matrix<int>.Build.DenseOfArray).ToList();
+        private static List<Matrix<int>>? _rotationMatrices3d;
+
         public static int[] Rotate3d(int[,] rotationMatrix3d, int[] vector3d)
         {
             var result = new int[3];
@@ -69,6 +73,18 @@ namespace AdventOfCode.Utils
             return vectors.Select(x => Rotate3d(x, rotationMatrix3d));
         }
 
+        public static int[,] Multiply(int[,] rotationMatrix1, int[,] rotationMatrix2)
+        {
+            var result = new int[3, 3];
 
+            for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+            for (int k = 0; k < 3; k++) 
+            {
+                result[i,j] += rotationMatrix1[i, k] * rotationMatrix2[k, j];
+            }
+
+            return result;
+        }
     }
 }
