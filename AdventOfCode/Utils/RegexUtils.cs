@@ -71,5 +71,15 @@ namespace AdventOfCode.Utils
 
             return instance;
         }
+
+        public static IEnumerable<int> GetInts(string s)
+        {
+            return Regex.Matches(s, @"\d+").Select(x => x.Value).Select(int.Parse);
+        }
+
+        public static IEnumerable<int> GetSignedInts(string s)
+        {
+            return Regex.Matches(s, @"\+?\-?\d+").Select(x => x.Value).Select(int.Parse);
+        }
     }
 }
