@@ -1,5 +1,5 @@
-using System.Linq;
 using System.Numerics;
+
 namespace AdventOfCode
 {
     public static class Helpers
@@ -50,6 +50,26 @@ namespace AdventOfCode
         public static List<TDest> ToList<TSrc, TDest>(this IEnumerable<TSrc> source, Func<TSrc, TDest> selector)
         {
             return source.Select(selector).ToList();
+        }
+
+        public static Queue<T> Enqueue<T>(this Queue<T> queue, IEnumerable<T> source)
+        {
+            foreach (var item in source)
+            {
+                queue.Enqueue(item);
+            }
+
+            return queue;
+        }
+
+        public static Queue<T> ToQueue<T>(this IEnumerable<T> source)
+        {
+            return new Queue<T>(source);
+        }
+
+        public static Queue<TOut> ToQueue<TIn, TOut>(this IEnumerable<TIn> source, Func<TIn, TOut> selector)
+        {
+            return new Queue<TOut>(source.Select(selector));
         }
 
         public static IEnumerable<int> ToRange(this string str, string separator = "-")

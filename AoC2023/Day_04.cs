@@ -13,12 +13,10 @@ namespace AdventOfCode.AoC2023
             var score = 0;
             foreach (var row in DataLines)
             {
-                var id = row.Split(":").First();
-                var rest = row.Split(":").Last();
-
-                var nos = rest.Split("|");
-                var winningNos = RegexUtils.GetInts(nos[0]);
-                var cardNos = RegexUtils.GetInts(nos[1]);
+                var splits = row.Split(':', '|');
+                
+                var winningNos = RegexUtils.GetInts(splits[1]);
+                var cardNos = RegexUtils.GetInts(splits[2]);
 
                 var matches = cardNos.Where(x => winningNos.Contains(x)).Count();
                 if (matches > 0)
@@ -26,7 +24,6 @@ namespace AdventOfCode.AoC2023
             }
 
             return score;
-
         }
 
         public override object Solve2()
@@ -35,39 +32,28 @@ namespace AdventOfCode.AoC2023
 
             foreach (var row in DataLines)
             {
-                var idRaw = row.Split(":").First();
-                var id = RegexUtils.GetInts(idRaw).First();
+                var splits = row.Split(':', '|');
+                var id = splits[0].GetInts().First();
 
-                var rest = row.Split(":").Last();
-
-                var nos = rest.Split("|");
-                var winningNos = RegexUtils.GetInts(nos[0]);
-                var cardNos = RegexUtils.GetInts(nos[1]);
+                var winningNos = splits[1].GetInts();
+                var cardNos = splits[2].GetInts();
 
                 var matches = cardNos.Where(x => winningNos.Contains(x)).Count();
                 CardMatches.Add(id, matches);
             }
 
-            var toEvaluate = new Queue<int>();
-            Dictionary<int, int> Counts = CardMatches.Keys.ToDictionary(x => x, x => 0);
-
-            foreach (var match in CardMatches)
-            {
-                toEvaluate.Enqueue(match.Key);
-            }
+            var toEvaluate = CardMatches.Keys.ToQueue();
+            var counts = new int[CardMatches.Count + 1];
             
             while (toEvaluate.TryDequeue(out var id))
             {
-                Counts[id] += 1;
+                counts[id] += 1;
 
                 var noMatches = CardMatches[id];
-                for (int i = 1; i <= noMatches; i++)
-                {
-                    toEvaluate.Enqueue(id + i);
-                }
+                toEvaluate.Enqueue(Enumerable.Range(id + 1, noMatches));
             }
 
-            return Counts.Sum(x => x.Value);
+            return counts.Sum();
         }
 
         public string testData = @"";

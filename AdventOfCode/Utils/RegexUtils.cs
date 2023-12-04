@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace AdventOfCode.Utils
 {
-    public static class RegexUtils
+    public static partial class RegexUtils
     {
         // regex mapper
         // takes a regex with named capture groups, and maps it to properties on a class
@@ -72,14 +72,20 @@ namespace AdventOfCode.Utils
             return instance;
         }
 
-        public static IEnumerable<int> GetInts(string s)
+        public static IEnumerable<int> GetInts(this string s)
         {
-            return Regex.Matches(s, @"\d+").Select(x => x.Value).Select(int.Parse);
+            return intsRegex().Matches(s).Select(x => int.Parse(x.Value));
         }
 
-        public static IEnumerable<int> GetSignedInts(string s)
+        public static IEnumerable<int> GetSignedInts(this string s)
         {
-            return Regex.Matches(s, @"\+?\-?\d+").Select(x => x.Value).Select(int.Parse);
+            return signedIntsRegex().Matches(s).Select(x => int.Parse(x.Value));
         }
+
+        [GeneratedRegex(@"\d+")]
+        private static partial Regex intsRegex();
+
+        [GeneratedRegex(@"\+?\-?\d+")]
+        private static partial Regex signedIntsRegex();
     }
 }
