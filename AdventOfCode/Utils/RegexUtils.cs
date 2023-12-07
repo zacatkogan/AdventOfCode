@@ -72,14 +72,19 @@ namespace AdventOfCode.Utils
             return instance;
         }
 
-        public static IEnumerable<int> GetInts(this string s)
+        public static List<int> GetInts(this string s)
         {
-            return intsRegex().Matches(s).Select(x => int.Parse(x.Value));
+            return intsRegex().Matches(s).Select(x => int.Parse(x.Value)).ToList();
         }
 
-        public static IEnumerable<int> GetSignedInts(this string s)
+        public static List<long> GetLongs(this string s)
         {
-            return signedIntsRegex().Matches(s).Select(x => int.Parse(x.Value));
+            return intsRegex().Matches(s).Select(x => long.Parse(x.Value)).ToList();
+        }
+
+        public static List<int> GetSignedInts(this string s)
+        {
+            return signedIntsRegex().Matches(s).Select(x => int.Parse(x.Value)).ToList();
         }
 
         [GeneratedRegex(@"\d+")]
