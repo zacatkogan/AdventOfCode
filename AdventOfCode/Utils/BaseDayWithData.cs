@@ -18,13 +18,14 @@ namespace AdventOfCode
             get => _data ??= GetData();
             set => _data = value; 
         }
-        private string? _data;
+        private string _data;
 
         public string[] DataLines
         {
             get => _dataLines ??= _data.Split('\n');
+            set => _dataLines = value;
         }
-        private string[] _dataLines;
+        private string[]? _dataLines;
 
         public virtual int GetProblemYear()
         {
