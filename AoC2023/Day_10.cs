@@ -55,15 +55,11 @@ namespace AdventOfCode.AoC2023
                     queue.Enqueue(startNeighbor);
                     distanceFromStart.Add(startNeighbor, 1);
                 }
-                else
-                {
-                }
             }
 
-            while (queue.TryDequeue(out Position nextPosition))
+            while (queue.TryDequeue(out Position thisPoint))
             {
-                var thisPoint = nextPosition;
-                var thisPointDistance = distanceFromStart[nextPosition];
+                var thisPointDistance = distanceFromStart[thisPoint];
                 var thisPointChar = array[thisPoint.Y][thisPoint.X];
 
                 var neighborsOfThisPoint = DirectionMap[thisPointChar];
@@ -71,11 +67,8 @@ namespace AdventOfCode.AoC2023
                 {
                     var neighborPoint = thisPoint + neighbor;
                     if (distanceFromStart.ContainsKey(neighborPoint))
-                    {
-                        if (distanceFromStart[neighborPoint] > thisPointDistance + 1)
-                            distanceFromStart[neighborPoint] = thisPointDistance + 1;
                         continue;
-                    }
+
                     queue.Enqueue(neighborPoint);
                     distanceFromStart.Add(neighborPoint, thisPointDistance + 1);
                 }
@@ -131,101 +124,55 @@ namespace AdventOfCode.AoC2023
                 {
                     var neighborPoint = thisPoint + neighbor;
                     if (pointsOnLine.Contains(neighborPoint))
-                    {
-                        
                         continue;
-                    }
+
                     queue.Enqueue(neighborPoint);
                     pointsOnLine.Add(neighborPoint);
                 }
             }
 
-            var arr = DataLines.Select(x => x.ToArray()).ToList();
-            for (int i = 0; i < numLines; i++)
+            var pointsInside = new List<Position>();
+
+            for (var y = 0; y < numLines; y++)
             {
-                for (int j = 0; j < lineLength; j++)
+                var line = DataLines[y];
+                var inside = false;
+                char prevChar = ' ';
+
+                for (var x = 0; x < numLines; x++)
                 {
-                    if (!pointsOnLine.Contains((j, i)))
+                    if (!pointsOnLine.Contains((x,y)))
                     {
-                        arr[i][j] = ' ';
-                    }
-                }
-            }
+                        if (inside)
+                            pointsInside.Add((x, y));
 
-            var pointsInShape = new List<Position>();
-
-            for (int i = 0; i < numLines; i++)
-            {
-                for (int j = 0; j < lineLength; j++)
-                {
-                    var p = new Position(j, i);
-
-                    if (pointsOnLine.Contains(p))
-                    {
                         continue;
                     }
 
-                    // cast a ray up and see how many times it matches a point on the line
+                    var c = line[x];
+                    if (c == 'S')
+                        c = '7';
 
-                    int crossings = 0;
-                    char? prevCrossing = null;
+                    if (c == '-')
+                        continue;
 
-                    for (int y = p.Y; y >= 0; y--)
-                    {
-                        var c = arr[y][p.X];
-                        if (c == 'S') // S is actually a '7'
-                            c = '7';
+                    if (c == '|')
+                        inside = !inside;
 
-                        // a pipe doesn't count as a crossing
-                        if (c == ' ' || c == '.')
-                        {
-                            prevCrossing = null;
-                            continue;
-                        }
+                    if (c == 'L' || c == 'F') // start of a bend
+                        prevChar = c;
 
-                        if (c == '|')
-                            continue;
+                    // end of a bend - opposite sides = crossing
+                    if ((prevChar == 'L' && c == '7') || (prevChar == 'F' && c == 'J'))
+                        inside = !inside;
 
-                        if (c == '-')
-                        {
-                            crossings++;
-                            prevCrossing = null;
-                            continue;
-                        }
-
-                        else if (c == 'L' || c == 'J')
-                        {
-                            prevCrossing = c;
-                        }
-
-                        else if ((c == '7' && prevCrossing == 'L')
-                            || (c == 'F' && prevCrossing == 'J'))
-                        {
-                            crossings++;
-                            prevCrossing = null;
-                        }
-
-                        else if ((c == '7' && prevCrossing == 'J')
-                            || (c == 'F' && prevCrossing == 'L'))
-                        {
-                            prevCrossing = null;
-                        }
-                        else
-                        {
-                            Console.WriteLine("something fucked up");
-                        }
-
-                    }
-
-                    if (crossings % 2 != 0)
-                    {
-                        pointsInShape.Add(p);
-                    }
+                    // end of a bend - same sides = no crossing
+                    if ((prevChar == 'L' && c == 'J') || (prevChar == 'F' && c == '&'))
+                        continue;
                 }
             }
 
-            return pointsInShape.Count;
-            // 269
+            return pointsInside.Count;
         }
     }
 }
