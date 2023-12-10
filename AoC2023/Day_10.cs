@@ -1,7 +1,6 @@
 namespace AdventOfCode.AoC2023
 {
     using AdventOfCode;
-    using System.Runtime.ExceptionServices;
 
     public class Day_10: BaseDay
     {

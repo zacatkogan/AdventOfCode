@@ -2,9 +2,6 @@ namespace AdventOfCode.AoC2023
 {
     using AdventOfCode;
     using AdventOfCode.Utils;
-    using MathNet.Numerics.Financial;
-    using System.ComponentModel.DataAnnotations;
-    using System.Text.RegularExpressions;
 
     public class Day_09: BaseDay
     {

@@ -2,14 +2,7 @@ namespace AdventOfCode.AoC2023
 {
     using AdventOfCode;
     using AdventOfCode.Utils;
-    using MathNet.Numerics;
-    using MathNet.Numerics.RootFinding;
     using Spectre.Console;
-    using System.Numerics;
-    using System.Reflection.Emit;
-    using System.Reflection.Metadata;
-    using System.Reflection.Metadata.Ecma335;
-    using System.Text;
 
     public class Day_07 : BaseDay
     {

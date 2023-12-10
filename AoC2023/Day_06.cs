@@ -1,13 +1,6 @@
 namespace AdventOfCode.AoC2023
 {
-    using AdventOfCode;
     using AdventOfCode.Utils;
-    using MathNet.Numerics;
-    using MathNet.Numerics.RootFinding;
-    using Spectre.Console;
-    using System.Numerics;
-    using System.Reflection.Emit;
-    using System.Reflection.Metadata.Ecma335;
 
     public class Day_06 : BaseDay
     {

@@ -2,10 +2,7 @@ namespace AdventOfCode.AoC2023
 {
     using AdventOfCode;
     using AdventOfCode.Utils;
-    using MathNet.Numerics;
-    using System.Runtime.InteropServices;
-    using System.Security.Principal;
-
+    
     public class Day_04 : BaseDay
     {
         public override object Solve1()

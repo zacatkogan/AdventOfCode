@@ -2,11 +2,6 @@ namespace AdventOfCode.AoC2023
 {
     using AdventOfCode;
     using AdventOfCode.Utils;
-    using MathNet.Numerics.Optimization;
-    using System.ComponentModel.DataAnnotations;
-    using System.Security.Cryptography.X509Certificates;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
 
     public class Day_02: BaseDay
     {
