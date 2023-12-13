@@ -7,9 +7,6 @@ namespace AdventOfCode.AoC2023
     {
         public override object Solve1()
         {
-            //Data = "0 3 6 9 12 15\n1 3 6 10 15 21\n10 13 16 21 30 45";
-
-
             var extrapolatedValues = 0;
 
             foreach (var line in DataLines)
