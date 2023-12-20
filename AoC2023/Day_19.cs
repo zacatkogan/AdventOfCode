@@ -2,14 +2,6 @@ namespace AdventOfCode.AoC2023
 {
     using AdventOfCode;
     using AdventOfCode.Utils;
-    using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
-    using System.Drawing;
-    using System.Dynamic;
-    using System.Reflection.Metadata.Ecma335;
-    using System.Runtime.Serialization;
-    using System.Security.Cryptography.X509Certificates;
-    using Beam = (Position location, Position direction);
 
     public class Day_19 : BaseDay
     {
