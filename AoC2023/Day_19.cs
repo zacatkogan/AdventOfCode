@@ -5,8 +5,6 @@ namespace AdventOfCode.AoC2023
 
     public class Day_19 : BaseDay
     {
-
-
         #region Part1
         public override object Solve1()
         {
