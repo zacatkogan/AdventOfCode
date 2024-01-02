@@ -120,40 +120,6 @@ namespace AdventOfCode.AoC2023
             return largest - 1;
 
 
-            //while (queue.TryPop(out var mapState))
-            //{
-            //    var current = mapState.currentPos;
-            //    var visited = mapState.visited;
-
-            //    // todo: check if we're at the end.
-            //    if (current == end)
-            //    {
-            //        largest = int.Max(visited.Count, largest);
-            //        continue;
-            //    }
-
-
-            //    foreach (var neighbor in Neighbors)
-            //    {
-            //        var neighborSquare = current + neighbor;
-
-            //        var neighborChar = DataLines[neighborSquare.Y][neighborSquare.X];
-
-            //        if (neighborChar == '#')
-            //        {
-            //            continue;
-            //        }
-
-            //        else
-            //        {
-            //            if (!visited.Contains(neighborSquare))
-            //                queue.Push((neighborSquare, visited.Add(neighborSquare)));
-
-            //            continue;
-            //        }
-
-            //    }
-            //}
             //return largest - 1; // starting square doesn't count
         }
 
