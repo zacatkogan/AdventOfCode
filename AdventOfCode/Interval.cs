@@ -60,7 +60,7 @@ namespace AdventOfCode
         }
     }
 
-    internal class IntervalLong
+    public class IntervalLong
     {
         public long Start { get; init; }
         public long End { get; init; }
@@ -102,5 +102,26 @@ namespace AdventOfCode
         {
             return new IntervalLong(range.Start.Value, range.End.Value);
         }
+    }
+
+    public class IntervalDouble
+    {
+        public double Start { get; init; }
+        public double End { get; init; }
+        public double Length => End - Start;
+
+        /// <param name="start">inclusive</param>
+        /// <param name="end">exclusive</param>
+        public IntervalDouble(double start, double end)
+        {
+            Start = start;
+            End = end;
+        }
+
+        public bool Contains(double value)
+        {
+            return Start <= value && value < End;
+        }
+
     }
 }

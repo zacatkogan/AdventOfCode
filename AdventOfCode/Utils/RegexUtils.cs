@@ -87,6 +87,11 @@ namespace AdventOfCode.Utils
             return signedIntsRegex().Matches(s).Select(x => int.Parse(x.Value)).ToList();
         }
 
+        public static List<long> GetSignedLongs(this string s)
+        {
+            return signedIntsRegex().Matches(s).Select(x => long.Parse(x.Value)).ToList();
+        }
+
         [GeneratedRegex(@"\d+")]
         private static partial Regex intsRegex();
 

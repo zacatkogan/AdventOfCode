@@ -108,6 +108,14 @@ namespace AdventOfCode
             this.X = x;
             this.Y = y;
         }
+
+        public PositionLong(IEnumerable<long> longs)
+        {
+            var l = longs.Take(2).ToList();
+            X = l[0];
+            Y = l[1];
+        }
+
         public long X;
         public long Y;
 
@@ -225,6 +233,14 @@ namespace AdventOfCode
             Z = z;
         }
 
+        public Position3dLong(IEnumerable<long> longs)
+        {
+            var l = longs.Take(3).ToList();
+            X = l[0];
+            Y = l[1];
+            Z = l[2];
+        }
+
         public long X;
         public long Y;
         public long Z;
@@ -258,4 +274,75 @@ namespace AdventOfCode
             yield return Z;
         }
     }
+
+    public record struct PositionDouble
+    {
+        public static double ManhattanDistance(PositionDouble a, PositionDouble b)
+        {
+            var distance = a - b;
+            return Math.Abs(distance.X) + Math.Abs(distance.Y);
+        }
+
+        public static Dictionary<string, PositionDouble> Directions = new()
+        {
+            {"U",  (0, 1)},
+            {"D", (0, -1)},
+            {"L", (-1, 0)},
+            {"R", (1, 0)}
+        };
+
+        public PositionDouble()
+        {
+            this.X = 0;
+            this.Y = 0;
+        }
+
+        public PositionDouble(double x, double y)
+        {
+            this.X = x;
+            this.Y = y;
+        }
+
+        public PositionDouble(IEnumerable<double> values)
+        {
+            var l = values.Take(2).ToList();
+            X = l[0];
+            Y = l[1];
+        }
+
+        public double X;
+        public double Y;
+
+        public void Deconstruct(out double x, out double y)
+        {
+            x = this.X;
+            y = this.Y;
+        }
+
+        public static PositionDouble operator +(PositionDouble a, PositionDouble b)
+        {
+            return new PositionDouble(a.X + b.X, a.Y + b.Y);
+        }
+
+        public static PositionDouble operator -(PositionDouble a, PositionDouble b)
+        {
+            return new PositionDouble(a.X - b.X, a.Y - b.Y);
+        }
+
+        public static implicit operator PositionDouble((double, double) point)
+        {
+            return new PositionDouble(point.Item1, point.Item2);
+        }
+
+        public static implicit operator (double, double)(PositionDouble pos)
+        {
+            return (pos.X, pos.Y);
+        }
+
+        public override string ToString()
+        {
+            return $"({X},{Y})";
+        }
+    }
+
 }
