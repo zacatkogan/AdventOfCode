@@ -67,7 +67,8 @@ public class Downloader
         var message = new HttpRequestMessage(HttpMethod.Get, url);
         message.Headers.Add("cookie", "session=" + SESSION_COOKIE);
 
-        var response = client.Send(message);
+        var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+        var response = client.Send(message, cts.Token);
 
         response.EnsureSuccessStatusCode();
 

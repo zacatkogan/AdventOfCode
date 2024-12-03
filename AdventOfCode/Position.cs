@@ -225,6 +225,14 @@ namespace AdventOfCode
             Z = z;
         }
 
+        public Position3dLong(IEnumerable<long> v)
+        {
+            var vv = v.Take(3).ToList();
+            X = vv[0];
+            Y = vv[1];
+            Z = vv[2];
+        }
+
         public long X;
         public long Y;
         public long Z;
