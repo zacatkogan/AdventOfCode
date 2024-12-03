@@ -4,7 +4,7 @@ namespace AdventOfCode.AoC2023
     using AdventOfCode.Utils;
     using static System.Runtime.InteropServices.JavaScript.JSType;
 
-    public class Day_24 : BaseDay
+    public class Day_24_dupe : BaseDay
     {
         public record struct Hailstone3d
         {

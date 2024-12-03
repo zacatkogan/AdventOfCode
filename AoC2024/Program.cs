@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.AoC2023
+﻿namespace AdventOfCode.AoC2024
 {
     public class Program
     {
