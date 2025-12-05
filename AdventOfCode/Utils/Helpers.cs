@@ -108,6 +108,11 @@ namespace AdventOfCode
             return sequence.Aggregate(T.One, (current, next) => (T)current * (T)next);
         }
 
+        public static char[,] To2dArray(this string str)
+        {
+            return str.To2dArray(x => x);
+        }
+
         public static T[,] To2dArray<T>(this string str, Func<char, T> selector)
         {
             var rows = str.Split("\n");
@@ -163,6 +168,33 @@ namespace AdventOfCode
         public static T Get<T>(this T[,] arr, Position p)
         {
             return arr[p.X, p.Y];
+        }
+
+        public static IEnumerator<T> GetEnumerator<T>(this T[,] data)
+        {
+            for (int x = 0; x < data.GetLength(0); x++)
+            for (int y = 0; y < data.GetLength(1); y++)
+            {
+                yield return data[x, y];
+            }
+        }
+
+        public static IEnumerator<Tout> Select<Tin, Tout>(this Tin[,] data, Func<Tin, Tout> selector)
+        {
+            for (int x = 0; x < data.GetLength(0); x++)
+                for (int y = 0; y < data.GetLength(1); y++)
+                {
+                    yield return selector(data[x, y]);
+                }
+        }
+
+        public static IEnumerator<Tout> Select<Tin, Tout>(this Tin[,] data, Func<Tin, Position, Tout> selector)
+        {
+            for (int x = 0; x < data.GetLength(0); x++)
+                for (int y = 0; y < data.GetLength(1); y++)
+                {
+                    yield return selector(data[x, y], (x, y));
+                }
         }
     }
 }

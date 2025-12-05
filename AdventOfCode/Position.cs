@@ -18,6 +18,18 @@ namespace AdventOfCode
             {"R", (1, 0)}
         };
 
+        public static readonly IEnumerable<Position> AllDirections = new List<Position>()
+        {
+            (-1, -1),
+            (-1, 0),
+            (-1, 1),
+            (0, -1),
+            (0, 1),
+            (1, -1),
+            (1, 0),
+            (1, 1),
+        };
+
         public Position()
         {
             this.X = 0;
@@ -78,6 +90,16 @@ namespace AdventOfCode
         {
             yield return X;
             yield return Y;
+        }
+
+        public IEnumerable<Position> GetAllNeighbors()
+        {
+            return AllDirections.Select(d => this + d);
+        }
+
+        public IEnumerable<Position> GetCardinalNeighbors()
+        {
+            return Directions.Select(d => this + d.Value);
         }
     }
 

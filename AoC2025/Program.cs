@@ -1,12 +1,11 @@
-﻿namespace AdventOfCode.AoC2025
+﻿namespace AdventOfCode.AoC2025;
+
+public class Program
 {
-    public class Program
+    public static void Main()
     {
-        public static void Main()
-        {
-            // See https://aka.ms/new-console-template for more information
-            AoCHelper.Solver.SolveLast();
-        }
+        //AoCHelper.Solver.Solve<Day_04>();
+        AoCHelper.Solver.SolveLast();
     }
 }
 
