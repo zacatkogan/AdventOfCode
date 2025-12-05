@@ -5,18 +5,7 @@ namespace AdventOfCode.AoC2025;
 
 public class Day_02 : BaseDay
 {
-    public struct RangeLong(long start, long finish)
-    {
-        public readonly long Start => start;
-        public readonly long Finish => finish;
-
-        public bool Contains(long value)
-        {
-            return value >= start && value <= finish;
-        }
-    }
-
-    private IEnumerable<RangeLong> SplitRangeOnSize(RangeLong rangeLong)
+    private IEnumerable<Range<long>> SplitRangeOnSize(Range<long> rangeLong)
     {
         var startDigitCount = rangeLong.Start.ToString().Length;
         var endDigitCount = rangeLong.Finish.ToString().Length;
@@ -33,25 +22,22 @@ public class Day_02 : BaseDay
         while (currentLength < endDigitCount)
         {
             var maxDigitThisLength = long.Parse(new string(Enumerable.Repeat('9', currentLength).ToArray()));
-            yield return new RangeLong(rangeStartValue, maxDigitThisLength);
+            yield return new Range<long>(rangeStartValue, maxDigitThisLength);
             rangeStartValue = maxDigitThisLength + 1;
             currentLength++;
         }
 
-        yield return new RangeLong(rangeStartValue, rangeLong.Finish);
+        yield return new Range<long>(rangeStartValue, rangeLong.Finish);
     }
-
-    
-
 
     public override object Solve1()
     {
         var splitData = Data.Split(",");
-        var ranges = splitData.Select(x => x.Split("-")).Select(y => new RangeLong(long.Parse(y[0]), long.Parse(y[1]))).ToList();
+        var ranges = splitData.Select(x => x.Split("-")).Select(y => new Range<long>(long.Parse(y[0]), long.Parse(y[1]))).ToList();
 
         long sum = 0;
 
-        var splitRanges = ranges.SelectMany(x => SplitRangeOnSize(x)).ToList();
+        var splitRanges = ranges.SelectMany(SplitRangeOnSize).ToList();
         
         foreach (var range in splitRanges)
         {
@@ -61,7 +47,7 @@ public class Day_02 : BaseDay
         return sum;
     }
 
-    public long GetDuplicatesInRange(RangeLong range)
+    public long GetDuplicatesInRange(Range<long> range)
     {
         var startAsString = range.Start.ToString();
         var finishAsString = range.Finish.ToString();
@@ -93,7 +79,7 @@ public class Day_02 : BaseDay
         return sum;
     }
 
-    public long GetDuplicatesInRangePart2(RangeLong range)
+    public long GetDuplicatesInRangePart2(Range<long> range)
     {
         var startAsString = range.Start.ToString();
         var finishAsString = range.Finish.ToString();
@@ -131,11 +117,11 @@ public class Day_02 : BaseDay
     public override object Solve2()
     {
         var splitData = Data.Split(",");
-        var ranges = splitData.Select(x => x.Split("-")).Select(y => new RangeLong(long.Parse(y[0]), long.Parse(y[1]))).ToList();
+        var ranges = splitData.Select(Range<long>.Parse).ToList();
 
         long sum = 0;
 
-        var splitRanges = ranges.SelectMany(x => SplitRangeOnSize(x)).ToList();
+        var splitRanges = ranges.SelectMany(SplitRangeOnSize).ToList();
 
         foreach (var range in splitRanges)
         {
